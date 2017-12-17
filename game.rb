@@ -23,14 +23,17 @@ class Game
   def gameLoop
     
     
-    puts "You have #{@guessCount} guesses left!"
+    
     
     while @guessCount > 0 && !@gameWon
+      puts "You have #{@guessCount} guesses left!"
       quit = getGuess
       puts "Will this run"
       
       displayRandomWord
+      
       @guessCount -= 1
+      puts "Will this run from the bottom of gameloop"
     end
     quit
   end
@@ -64,6 +67,8 @@ class Game
     puts "This ran from getGuess"
       
     end
+    
+    
     puts "Will this run from getguess"
     true if guess == "1"
   end
