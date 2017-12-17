@@ -17,6 +17,7 @@ while quit == false
       puts "You have #{count} guesses left!"
       quit = game.getGuess
       game.displayRandomWord
+      
       count -= 1
       
     end
