@@ -15,8 +15,7 @@ while quit == false
     
     
     game = Game.new
-    game.getGuess
-    
+   
   
   when "2"
     #Open a saved file here
