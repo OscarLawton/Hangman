@@ -4,7 +4,7 @@ puts "Welcome to Hangman"
 
 
 quit = false
-
+quitGame = false
 while quit == false
   
   puts "Enter 1 for new game, 2 to load a game and 3 for quit: "
@@ -13,17 +13,18 @@ while quit == false
   case choice
   when "1"
     game = Game.new
-    while !quit
+    while !quitGame
      
-      quit = game.getGuess
+      quitGame = game.gameLoop
     
     end
-    quit = true if count == 0
+    
   when "2"
-    #Open a saved file here
+    #load a saved file 
   when "3"
     quit = true
+    
   end
-  
+  quitGame = false
   
 end

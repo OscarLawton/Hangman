@@ -14,7 +14,8 @@ class Game
     
     @gameWon = false
     @guessCount = 12
-    @bad_guess_array= []
+    @good_guess_array= []
+    @bad_guess_array = []
     @random_word_array = @@dic[rand(0..48891)].downcase.split('')
     @random_word_array.delete_at(@random_word_array.length-1)
     
@@ -22,20 +23,16 @@ class Game
   
   def gameLoop
     
-    
-    
-    
-    while @guessCount > 0 && !@gameWon
+    while @guessCount > 0 
       puts "You have #{@guessCount} guesses left!"
       quit = getGuess
-      puts "Will this run"
-      
-      displayRandomWord
+      displayRandomWord 
       
       @guessCount -= 1
-      puts "Will this run from the bottom of gameloop"
+      return quit
     end
-    quit
+    puts "You ran out of guesses" if @guessCount <= 0
+      
   end
   
   def getGuess
@@ -55,43 +52,71 @@ class Game
       guess = gets.chomp.downcase
       
       
-      @bad_guess_array.include?(guess) ? alreadyGuessed = true : @bad_guess_array.push(guess)
-      puts "You already guessed that letter, guess again." if alreadyGuessed
+      
+      puts "You already guessed that letter, guess again." if @bad_guess_array.include?(guess)
       
       oneLetter = true if guess.length == 1
       puts "One charater at a time, guess again." if oneLetter == false
       
-      (guess.ord > 64 && guess.ord < 91 ) || (guess.ord > 96 && guess.ord < 123) || guess.ord == 49 ? goodChars = true : goodChars = false
+      (guess.ord > 64 && guess.ord < 91 ) || (guess.ord > 96 && guess.ord < 123) || (guess.ord == 49 || guess.ord == 48) ? goodChars = true : goodChars = false
       puts "Only letters please, guess again." if goodChars == false
-   
-    puts "This ran from getGuess"
-      
+       
+      checkMethod(guess)
     end
-    
-    
-    puts "Will this run from getguess"
+    puts "This ran"
+    to_json if guess == "0"
     true if guess == "1"
   end
   
-  def checkIfWon
+  def checkMethod guess
     
+   @random_word_array.include?(guess) ? @good_guess_array.push(guess) : (@bad_guess_array.push(guess) if guess != "0")
+    
+  end
+  
+  def gameWonCheck
+    print @good_guess_array
+    print @random_word_array
+    if @good_guess_array == @random_word_array
+      puts "YOU WON!!!"
+      @gameWon = true
+      return true
+    end
   end
   
   def displayRandomWord
-    puts "This ran from displayRandomWord"
-    print @random_word_array
-    puts
-    
+    blankCounter = 0
+    letterCounter = 0
     @random_word_array.each do |letter|
-      
-      print @bad_guess_array.include?(letter) ? letter : "_"
-      
+      if  @good_guess_array.include?(letter)
+        print letter
+      else
+        print "_"
+        blankCounter += 1
+      end
+      letterCounter += 1
+    
     end
-   
+    puts "letterCounter is equal to: #{letterCounter}"
+    puts "RWA is equall to: #{@random_word_array.length}"
+    if letterCounter == @random_word_array.length && blankCounter == 0
+      puts "You Won!!!"
+      @gameWon = true
+      return true
+    end
+    return false
   end
   
-  def getWord
-    @word
+  def to_json
+    puts "Game Saved!!!"
+    JSON.dump ({
+      :gameWon => @gameWon,
+      :guessCount => @guessCount,
+      :good_guess_array => @good_guess_array,
+      :bad_guess_array => @bad_guess_array,
+      :@random_word_array => @random_word_array
+    })
   end
+ 
   
 end
